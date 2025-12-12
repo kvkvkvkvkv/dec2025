@@ -1,20 +1,19 @@
 class Solution {
     public int[] dailyTemperatures(int[] temp) {
-        Stack<Integer> stack = new Stack();
         int[] ans = new int[temp.length];
-        for(int index = 0;index<temp.length;index++) {
-
-            if(stack.isEmpty()) {
-                stack.push(index);
+        int max = -1;
+        for(int index=temp.length-1;index>=0;index--) {
+            if(temp[index]>=max) {
+                ans[index] = 0;
+                max = temp[index];
             } else {
-                while(!stack.isEmpty() && temp[stack.peek()]<temp[index]) {
-                    int cur = stack.pop();
-                    ans[cur] = index-cur; 
+                int next = 1;
+                while(index+next<temp.length && temp[index+next]<=temp[index]) {
+                    next += ans[index+next];
                 }
-                stack.push(index);
+                ans[index] = next;
             }
         }
-
         return ans;
     }
 }
