@@ -1,28 +1,32 @@
 class Solution {
+    int l =0;
+    int r =0;
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        int l =0;
-        int r =0;
         int m = nums1.length;
         int n = nums2.length;
-        int[] temp = new int[m+n];
-        int i=0;
-
-        while(l<m || r<n) {
-            if(l == m ) {
-                temp[i++] = nums2[r++];
-            } else if(r == n) {
-                temp[i++] = nums1[l++];
-            } else if(nums2[r]<=nums1[l]) {
-                temp[i++] = nums2[r++];
-            } else {
-                temp[i++] = nums1[l++];
+        
+        if((m+n)%2==0) {
+            int end = ((m+n)/2)-1;
+            for(int i=0;i<end;i++) {
+                min(nums1, nums2);
             }
+            return (double)(min(nums1, nums2)+min(nums1,nums2))/2;
+        } else {
+            int end = (m+n)/2;
+            for(int i=0;i<end;i++) {
+                min(nums1, nums2);
+            }
+            return (double)min(nums1,nums2);
         }
+    }
 
-        int mid = (m+n)/2;
-        if((m+n) % 2 == 1) {
-            return temp[mid];
+    int min(int[] nums1, int[] nums2) {
+        if(l == nums1.length) {
+            return nums2[r++];
+        } 
+        if(r == nums2.length) {
+            return nums1[l++];
         }
-        return (double)(temp[mid] + temp[mid-1])/2;
+        return nums1[l]<=nums2[r]?nums1[l++]:nums2[r++];
     }
 }
