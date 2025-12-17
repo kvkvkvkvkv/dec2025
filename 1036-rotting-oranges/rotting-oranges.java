@@ -18,6 +18,10 @@ class Solution {
             return 0;
         }
 
+        if(good>0 && q.isEmpty()) {
+            return -1;
+        }
+
 
 
         int count = 0;
