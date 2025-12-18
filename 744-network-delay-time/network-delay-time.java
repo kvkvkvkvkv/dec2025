@@ -7,7 +7,7 @@ class Solution {
             map.computeIfAbsent(ele[0],i-> new HashSet<>()).add(new Pair(ele[1],ele[2]));
         }
 
-        Queue<Pair<Integer,Integer>> q = new LinkedList();
+        PriorityQueue<Pair<Integer,Integer>> q = new PriorityQueue<>((a,b) -> Integer.compare(a.getValue(),b.getValue()));
         q.add(new Pair(k,0));
         int[] time = new int[n+1];
         Arrays.fill(time, Integer.MAX_VALUE);
