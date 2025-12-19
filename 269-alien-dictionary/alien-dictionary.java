@@ -1,12 +1,10 @@
 class Solution {
     public String alienOrder(String[] words) {
         Map<Character, Set<Character>> map = new HashMap();
-        Map<Character, Integer> count = new HashMap();
 
         for(String cur:words) {
             for(char ele:cur.toCharArray()) {
                 map.putIfAbsent(ele, new HashSet());
-                count.putIfAbsent(ele, 0);
             }
         }
 
@@ -19,20 +17,9 @@ class Solution {
             if(j==min && words[i].length()<words[i-1].length()) {
                 return "";
             }
-            // if(j==min && words[i].length()==words[i-1].length()) {
-            //     continue;
-            // }
 
             if(j<min) {
                 map.get(words[i].charAt(j)).add(words[i-1].charAt(j));
-                count.put(words[i-1].charAt(j), count.getOrDefault(words[i-1].charAt(j),0)+1);
-            }
-        }
-
-        List<Character> start = new ArrayList();
-        for(char key:count.keySet()) {
-            if(count.get(key)==0) {
-                start.add(key);
             }
         }
 
