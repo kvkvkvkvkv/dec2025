@@ -9,14 +9,18 @@ class Solution {
         if(i2 == p.length()) {
             return i1 == s.length();
         }
+
+        if(memo[i1][i2] != null) {
+            return memo[i1][i2];
+        }
         
         boolean firstMatch = (i1 < s.length() &&
                 (p.charAt(i2) == s.charAt(i1) || p.charAt(i2) == '.'));        
 
         if(i2+1 < p.length() && p.charAt(i2+1) == '*') {
-            return match(s,p,i1,i2+2) || firstMatch && match(s,p,i1+1,i2);
+            return memo[i1][i2] = match(s,p,i1,i2+2) || firstMatch && match(s,p,i1+1,i2);
         }
 
-        return firstMatch && match(s,p,i1+1,i2+1);
+        return memo[i1][i2] = firstMatch && match(s,p,i1+1,i2+1);
     }
 }
