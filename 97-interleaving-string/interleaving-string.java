@@ -1,14 +1,15 @@
 class Solution {
-    Boolean[][][] memo;
+    Boolean[][] memo;
     public boolean isInterleave(String s1, String s2, String s3) {
-        memo = new Boolean[s1.length()][s2.length()][s3.length()];
+        memo = new Boolean[s1.length()][s2.length()];
         if(s1.length()+s2.length() != s3.length()) {
             return false;
         }
-        return leave(s1,s2,s3,0,0,0);
+        return leave(s1,s2,s3,0,0);
     }
 
-    public boolean leave(String s1, String s2, String s3, int i1, int i2, int i3) {
+    public boolean leave(String s1, String s2, String s3, int i1, int i2) {
+        int i3 = i1+i2;
         if(i1 == s1.length()) {
             while (i2 < s2.length()) {
                 if (s2.charAt(i2) != s3.charAt(i3)) return false;
@@ -25,8 +26,8 @@ class Solution {
             return true;
         }
 
-        if(memo[i1][i2][i3] != null) {
-            return memo[i1][i2][i3];
+        if(memo[i1][i2] != null) {
+            return memo[i1][i2];
         }
 
         char f = s1.charAt(i1);
@@ -39,22 +40,22 @@ class Solution {
 
         boolean ans = false;
         if(f==s && f==t) {
-            ans = leave(s1, s2, s3, i1+1, i2, i3+1) || leave(s1, s2, s3, i1, i2+1, i3+1);
+            ans = leave(s1, s2, s3, i1+1, i2) || leave(s1, s2, s3, i1, i2+1);
             if(ans) {
-                return memo[i1][i2][i3] = ans;
+                return memo[i1][i2] = ans;
             }
         } else if(f == t) {
-            ans = leave(s1, s2, s3, i1+1, i2, i3+1);
+            ans = leave(s1, s2, s3, i1+1, i2);
             if(ans) {
-                return memo[i1][i2][i3] = ans;
+                return memo[i1][i2] = ans;
             }
         } else if(s == t) {
-            ans = leave(s1, s2, s3, i1, i2+1, i3+1);
+            ans = leave(s1, s2, s3, i1, i2+1);
             if(ans) {
-                return memo[i1][i2][i3] = ans;
+                return memo[i1][i2] = ans;
             }
         }
 
-        return memo[i1][i2][i3] = ans;
+        return memo[i1][i2] = ans;
     }
 }
