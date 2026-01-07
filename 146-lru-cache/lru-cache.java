@@ -20,6 +20,9 @@ class LRUCache {
     }
     
     public void put(int key, int value) {
+        if(size == 0) {
+            return;
+        }
         int capacity = itemsInCache.size();
         Item cacheItem = itemsInCache.getOrDefault(key, null);
 
