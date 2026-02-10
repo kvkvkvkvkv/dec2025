@@ -1,49 +1,51 @@
 class Solution {
-    int[][] dir = {{0,1},{0,-1},{1,0},{-1,0}};
+    int[][] direction = {{-1,0},{1,0},{0,-1},{0,1}};
     public void solve(char[][] board) {
-        Queue<Pair<Integer,Integer>> o = new LinkedList();
-        
-        for(int i=0;i<board.length;i++) {
+        int m = board.length;
+        int n = board[0].length;
+
+        Queue<int[]> queue = new LinkedList<>();
+        for(int i=0;i<m;i++) {
             if(board[i][0] == 'O') {
-                o.add(new Pair(i,0));
+                queue.add(new int[]{i,0});
             }
 
-            if(board[i][board[0].length-1] == 'O') {
-                o.add(new Pair(i,board[0].length-1));
+            if(board[i][n-1] == 'O') {
+                queue.add(new int[]{i,n-1});
             }
         }
 
-        for(int i=0;i<board[0].length;i++) {
+        for(int i=0;i<n;i++) {
             if(board[0][i] == 'O') {
-                o.add(new Pair(0,i));
+                queue.add(new int[]{0,i});
             }
 
-            if(board[board.length-1][i] == 'O') {
-                o.add(new Pair(board.length-1,i));
-            }
-        }
-
-        while(!o.isEmpty()) {
-            Pair<Integer,Integer> top = o.poll();
-            board[top.getKey()][top.getValue()] = 'Y';
-
-            for(int[] d:dir) {
-                int r = d[0]+top.getKey();
-                int c = d[1]+top.getValue();
-
-                if(r<0 || c<0 || r==board.length || c==board[0].length || board[r][c]=='X' || board[r][c]=='Y') {
-                    continue;
-                } 
-                o.add(new Pair(r,c));
+            if(board[m-1][i] == 'O') {
+                queue.add(new int[]{m-1,i});
             }
         }
 
 
-        for(int i=0;i<board.length;i++) {
-            for(int j=0;j<board[0].length;j++) {
+        while(!queue.isEmpty()) {
+            int[] top = queue.poll();
+            board[top[0]][top[1]] = 'Y';
+
+            for(int[] dir:direction) {
+                int r = dir[0]+top[0];
+                int c = dir[1]+top[1];
+
+                if(r>=0 && c>=0 && r<m && c<n && board[r][c]=='O') {
+                    queue.add(new int[]{r,c});
+                    board[r][c] = 'Y';
+                }
+            }
+        }
+
+        for(int i=0;i<m;i++) {
+            for(int j=0;j<n;j++) {
                 if(board[i][j] == 'O') {
                     board[i][j] = 'X';
-                }else if(board[i][j] == 'Y') {
+                } else if(board[i][j] == 'Y') {
                     board[i][j] = 'O';
                 }
             }
