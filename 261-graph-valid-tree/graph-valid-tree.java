@@ -1,43 +1,46 @@
 class Solution {
-    boolean[] stack;
     boolean[] seen;
     public boolean validTree(int n, int[][] edges) {
-        stack = new boolean[n];
         seen = new boolean[n];
-        Map<Integer,Set<Integer>> map = new HashMap();
-        for(int[] ele:edges) {
-            map.computeIfAbsent(ele[1], i -> new HashSet<>()).add(ele[0]);
-            map.computeIfAbsent(ele[0], i -> new HashSet<>()).add(ele[1]);
-        }
-        if(cycle(0, map, -1)) {
+        Map<Integer,List<Integer>> map = new HashMap<>();
+
+        if(edges.length+1 != n) {
             return false;
         }
+        for(int[] ele:edges) {
+            map.computeIfAbsent(ele[0], key -> new ArrayList()).add(ele[1]);
+            map.computeIfAbsent(ele[1], key -> new ArrayList()).add(ele[0]);
+        }
+        if(dfs(0, -1, map)) {
+            return false;
+        }   
 
-        for(boolean ele:seen) {
-            if(!ele) {
-                return false;
+        int count = 0;
+        for(int i=0;i<n;i++) {
+            if(seen[i]) {
+                count++;
             }
         }
-        return true;
+        return count == edges.length+1;
     }
 
-    boolean cycle(int ele, Map<Integer, Set<Integer>> map, int parent) {
-        if(stack[ele]) {
+    boolean dfs(int node, int parent, Map<Integer, List<Integer>> map) {
+        if(seen[node]) {
             return true;
         }
 
-        if(seen[ele]) {
+        seen[node] = true;
+        if(map.get(node) == null) {
             return false;
         }
-
-        seen[ele] = true;
-        stack[ele] = true;
-        for(int val:map.getOrDefault(ele, new HashSet<>())) {
-            if(val!=parent && cycle(val,map,ele)) {
-                return true;
+        
+        for(int ele:map.get(node)) {
+            if(ele != parent) {
+                if(dfs(ele, node, map)) {
+                    return true;
+                }
             }
         }
-        stack[ele] = false;
         return false;
     }
 }
