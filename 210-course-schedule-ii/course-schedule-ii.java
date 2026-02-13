@@ -1,38 +1,44 @@
 class Solution {
-    int[] inward;
+    boolean[] stack;
+    boolean[] seen;
+    int in=0;
     public int[] findOrder(int numCourses, int[][] prerequisites) {
-        inward = new int[numCourses];
+        stack = new boolean[numCourses];
+        seen = new boolean[numCourses];
+        in = numCourses-1;
+        Map<Integer, List<Integer>> map = new HashMap();
 
         for(int[] ele:prerequisites) {
-            inward[ele[0]]++;
+            map.computeIfAbsent(ele[1], key -> new ArrayList<>()).add(ele[0]);
         }
-        Queue<Integer> q = new LinkedList<>();
-        Map<Integer, List<Integer>> map = new HashMap<>();
 
-        for(int[] ele:prerequisites) {
-            map.computeIfAbsent(ele[1], key->new ArrayList<>()).add(ele[0]);
-        }
-        for(int i=0;i<numCourses;i++) {
-            if(inward[i] == 0) {
-                q.add(i);
-            }
-        }
         int[] ans = new int[numCourses];
-        int index=0;
-        while(!q.isEmpty()) {
-            int cur = q.poll();
-            ans[index++] = cur;
-            if(map.get(cur) == null) {
-                continue;
-            }
-            for(int ele:map.get(cur)) {
-                inward[ele]--;
-                if(inward[ele] == 0) {
-                    q.add(ele);
-                }
+        for(int i=0;i<numCourses;i++) {
+            if(!seen[i] && cycle(map, i, ans)) {
+                return new int[]{};
             }
         }
+        return ans;
+    }
 
-        return index==numCourses?ans:new int[]{};
+    boolean cycle(Map<Integer,List<Integer>> map, int node, int[] ans) {
+        if(stack[node]) {
+            return true;
+        }
+
+        if(seen[node]) {
+            return false;
+        }
+
+        stack[node] = true;
+        seen[node]=true;
+        for(int next:map.getOrDefault(node, new ArrayList<>())) {
+            if(cycle(map, next, ans)) {
+                return true;
+            }
+        }
+        stack[node]=false;
+        ans[in--] = node;
+        return false;
     }
 }
