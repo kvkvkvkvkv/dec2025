@@ -1,49 +1,51 @@
 class Solution {
-    int[] rank;
-    int[] root;
-    public int[] findRedundantConnection(int[][] edges) {
-        rank = new int[edges.length+1];
-        root = new int[edges.length+1];
-        init();
 
-        for(int[] e:edges) {
-            if(union(e[0],e[1])) {
-                return e;
+    int[] root;
+    int[] rank;
+    public int[] findRedundantConnection(int[][] edges) {
+        int[] temp = new int[2];
+        int n = edges.length;
+        root = new int[n+1];
+        rank = new int[n+1];
+        init();
+        for(int[] ele:edges) {
+            if(!union(ele[0],ele[1])) {
+                temp = ele;
             }
         }
-        return new int[]{};
+        return temp;
+    }
+
+    void init() {
+        for(int i=0;i<root.length;i++) {
+            root[i] = i;
+            rank[i] = 1;
+        }
     }
 
     int find(int x) {
-        if(root[x] == x){
+        if(root[x] == x) {
             return x;
         }
         return root[x] = find(root[x]);
     }
 
     boolean union(int x, int y) {
-        int rX = find(x);
-        int rY = find(y);
+        int rootX = find(x);
+        int rootY = find(y);
 
-        if(rX == rY) {
-            return true;
+        if(rootX == rootY) {
+            return false;
         }
 
-        if(rank[rX]>rank[rY]) {
-            root[rY] = rX;
-        } else if(rank[rX]< rank[rY]) {
-            root[rY] = rX;
+        if(rank[rootX]>rank[rootY]) {
+            root[rootY] = rootX;
+        } else if(rank[rootY]>rank[rootX]) {
+            root[rootX] = rootY;
         } else {
-            rank[rX]++;
-            root[rY] = rX;
+            rank[rootY]++;
+            root[rootX] = rootY;
         }
-        return false;
-    }
-
-    void init() {
-        for(int i=0;i<rank.length;i++) {
-            rank[i] = 2;
-            root[i] = i;
-        }
+        return true;
     }
 }
