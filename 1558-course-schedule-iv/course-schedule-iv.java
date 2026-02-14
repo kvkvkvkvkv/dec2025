@@ -24,6 +24,7 @@ class Solution {
         }
         for(int ele:map.getOrDefault(start, new ArrayList<>())) {
             if(isReach(ele, end, map)) {    
+                memo.put(p, true);
                 return true;
             }
         }
