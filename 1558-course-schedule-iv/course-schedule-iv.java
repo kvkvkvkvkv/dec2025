@@ -7,6 +7,10 @@ class Solution {
             map.computeIfAbsent(ele[0], k -> new ArrayList()).add(ele[1]);
         }
 
+        for(int i = 0; i < numCourses; i++) {
+            isReach(i, i, map);
+        }
+
         List<Boolean> ans = new ArrayList<>();
         for(int[] ele:queries) {
             ans.add(isReach(ele[0],ele[1],map));
