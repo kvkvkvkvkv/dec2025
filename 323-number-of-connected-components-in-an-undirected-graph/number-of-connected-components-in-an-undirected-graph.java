@@ -1,30 +1,50 @@
 class Solution {
-    boolean[] seen;
+    int[] root;
+    int[] rank;
     public int countComponents(int n, int[][] edges) {
-        seen = new boolean[n];
-        int c = 0;
-        Map<Integer, Set<Integer>> map = new HashMap();
+        int count = n;
+        root= new int[n];
+        rank= new int[n];
+        init();
         for(int[] ele:edges) {
-            map.computeIfAbsent(ele[1], i-> new HashSet<>()).add(ele[0]);
-            map.computeIfAbsent(ele[0], i-> new HashSet<>()).add(ele[1]);
-        }
-        for(int i=0;i<n;i++) {
-            if(!seen[i]) {
-                dfs(i,map);
-                c++;
+            if(union(ele[0],ele[1])) {
+                count--;
             }
         }
-        return c;
+
+        return count;
     }
 
-    public void dfs(int n, Map<Integer,Set<Integer>> map) {
-        if(seen[n]) {
-            return;
+    void init() {
+        for(int i=0;i<root.length;i++) {
+            root[i] = i;
+            rank[i] = 1;
+        }
+    }
+
+    int find(int x) {
+        if(root[x] == x) {
+            return x;
+        }
+        return root[x] = find(root[x]);
+    }
+
+    boolean union(int x, int y) {
+        int rootX = find(x);
+        int rootY = find(y);
+
+        if(rootX == rootY) {
+            return false;
         }
 
-        seen[n] = true;
-        for(int ele:map.getOrDefault(n, new HashSet<>())) {
-            dfs(ele, map);
+        if(rank[rootX]>rank[rootY]) {
+            root[rootY] = rootX;
+        } else if(rank[rootY]>rank[rootX]) {
+            root[rootX] = rootY;
+        } else {
+            rank[rootY]++;
+            root[rootX] = rootY;
         }
+        return true;
     }
 }
