@@ -1,32 +1,48 @@
 class Solution {
+    Map<Integer, Integer> map = new HashMap<>();
+        
     public int[] topKFrequent(int[] nums, int k) {
-        Map<Integer,Integer> map = new HashMap<>();
-
         for(int ele:nums) {
             map.put(ele, map.getOrDefault(ele, 0)+1);
         }
-
-        LinkedList<Integer>[] node = new LinkedList[nums.length+1];
+        int[] val = new int[map.size()];
+        int in = 0;
         for(int key:map.keySet()) {
-            int val = map.get(key);
+            val[in++] = key;
+        }
+        findK(val, k, 0, val.length-1);
+        return Arrays.copyOfRange(val, val.length-k, val.length);
+    }
 
-            if(node[val] == null) {
-                node[val] = new LinkedList<Integer>();
-            }
-            node[val].add(key);
+    public void findK(int[] nums, int k, int l, int r) {
+        int mid = l+(r-l)/2;
+        int pivot = sort(nums, k, l, r);
+        if(pivot == nums.length - k) {
+            return;
         }
-        int[] ans = new int[k];
-        int e=0;
-        for(int i=nums.length;i>=0;i--) {
-            if(node[i] != null) {
-                while(!node[i].isEmpty() && e<k) {
-                    ans[e++] = (int)node[i].removeFirst();
-                }
-            }
-            if(e==k) {
-                break;
-            }
+        if(nums.length-k>pivot) {
+            findK(nums, k, pivot+1, r);
+        } else {
+            findK(nums, k, l, pivot-1);
         }
-        return ans;
+    }
+
+    int sort(int[] nums, int k, int l, int r) {
+        int i=l;
+        int p = r;
+        for(int j=l;j<r;j++) {
+            if(map.get(nums[j])<=map.get(nums[p])) {
+                swap(i, j, nums);
+                i++;
+            } 
+        }
+        swap(i, p, nums);
+        return i;
+    }
+
+    void swap(int i, int j, int[] nums) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
     }
 }
