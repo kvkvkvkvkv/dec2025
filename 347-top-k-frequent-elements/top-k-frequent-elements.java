@@ -1,36 +1,32 @@
 class Solution {
     public int[] topKFrequent(int[] nums, int k) {
-        int n = nums.length+1;
-        List[] val = new List[n];
-        int[] ans = new int[k];
-        for(int index=0;index<n;index++) {
-            val[index] = new ArrayList<Integer>();
-        }
-
-        Map<Integer, Integer> count = new HashMap();
+        Map<Integer,Integer> map = new HashMap<>();
 
         for(int ele:nums) {
-            count.putIfAbsent(ele, 0);
-            count.put(ele, count.get(ele)+1);
+            map.put(ele, map.getOrDefault(ele, 0)+1);
         }
 
-        for(int key:count.keySet()) {
-            val[count.get(key)].add(key);
+        LinkedList<Integer>[] node = new LinkedList[nums.length+1];
+        for(int key:map.keySet()) {
+            int val = map.get(key);
+
+            if(node[val] == null) {
+                node[val] = new LinkedList<Integer>();
+            }
+            node[val].add(key);
         }
-
-        int i = 0;
-        for(int index=n-1;index>=0 && k>0;index--) {
-            List<Integer> cur = val[index];
-
-            for(int ele: cur) {
-                ans[i++] = ele;
-                k--;
-                if(k==0) {
-                    break;
+        int[] ans = new int[k];
+        int e=0;
+        for(int i=nums.length;i>=0;i--) {
+            if(node[i] != null) {
+                while(!node[i].isEmpty() && e<k) {
+                    ans[e++] = (int)node[i].removeFirst();
                 }
             }
+            if(e==k) {
+                break;
+            }
         }
-
         return ans;
     }
 }
