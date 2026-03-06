@@ -1,41 +1,39 @@
 class Solution {
+    List<List<Integer>> ans = new ArrayList<>();
     public List<List<Integer>> threeSum(int[] nums) {
         Arrays.sort(nums);
-        List<List<Integer>> ans = new ArrayList();
-        for(int i=0;i<=nums.length-3;i++) {
-            int left = i+1;
-            int right = nums.length-1;
-            if(left<right) {
-                twoSum(nums, i, left, right, ans);
+
+        for(int i=0;i<nums.length;i++) {
+            if(i>0 && nums[i] == nums[i-1]) {
+                continue;
             }
-            while(i<nums.length-3 && nums[i+1]==nums[i]) {
-                i++;
-            }
-        }
+            twoSum(nums, i, nums.length-1);
+        }    
 
         return ans;
     }
 
-    public void twoSum(int[] numbers, int up, int left, int right, List<List<Integer>> ans) {
-        while(left<right) {
-            int sum = numbers[up] + numbers[left] + numbers[right];
-            List<Integer> temp = new ArrayList();
+    void twoSum(int[] nums, int i, int r) {
+        int l = i+1;
+        while(l<r) {
+            int sum = nums[i] + nums[l] + nums[r];
             if(sum == 0) {
-                temp.add(numbers[up]);
-                temp.add(numbers[left]);
-                temp.add(numbers[right]);
+                List<Integer> temp = new ArrayList<>();
+                temp.add(nums[i]);
+                temp.add(nums[l]);
+                temp.add(nums[r]);
                 ans.add(temp);
             }
-
-            if(sum>0) {
-                right--;
-                while(left<right && numbers[right]==numbers[right+1]) {
-                    right--;
+            if(sum<=0) {
+                l++;
+                while(l<r && nums[l] == nums[l-1]) {
+                    l++;
                 }
             } else {
-                left++;
-                while(left<right && numbers[left]==numbers[left-1]) {
-                    left++;
+                r--;
+                while(l<r && nums[r] == nums[r+1]) {
+                    r--;
+
                 }
             }
         }
