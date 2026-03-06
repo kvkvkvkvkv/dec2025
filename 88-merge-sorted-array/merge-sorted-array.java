@@ -5,16 +5,16 @@ class Solution {
         int k = m+n-1;
 
         while(k>=0) {
-            int one = l<0?Integer.MIN_VALUE:nums1[l];
-            int two = r<0?Integer.MIN_VALUE:nums2[r];
-            if(one>=two) {
-                nums1[k] = one;
+            int v1 = l<0?Integer.MIN_VALUE:nums1[l];
+            int v2 = r<0?Integer.MIN_VALUE:nums2[r];
+
+            if(v1>=v2) {
+                nums1[k--] = v1;
                 l--;
             } else {
-                nums1[k] = two;
+                nums1[k--] = v2;
                 r--;
             }
-            k--;
-        }
+        }    
     }
 }
