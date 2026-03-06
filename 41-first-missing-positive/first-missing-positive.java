@@ -1,31 +1,46 @@
 class Solution {
     public int firstMissingPositive(int[] nums) {
-        int i=0;
-        while(i< nums.length) {
-            boolean skip = skip(nums, i);
-            if(skip) {
-                i++;
-            } else {
-                swap(i, nums);
+        boolean one = false;
+        for(int ele:nums) {
+            if(ele == 1) {
+                one = true;
+                break;
             }
         }
 
-        for(int in=0;in<nums.length;in++) {
-            if(nums[in] != in+1) {
-                return in+1;
+        if(!one) {
+            return 1;
+        }
+
+        for(int i=0;i<nums.length;i++) {
+            if(nums[i] <= 0 || nums[i]>nums.length) {
+                nums[i] = 1;
             }
         }
+
+        for(int i=0;i<nums.length;i++) {
+            int cur = Math.abs(nums[i]);
+            if(cur<nums.length) {
+                nums[cur] = -Math.abs(nums[cur]);
+                continue;
+            }
+
+            if(cur == nums.length) {
+                nums[0] = -Math.abs(nums[0]);
+            }
+        }
+
+        for(int i=1;i<nums.length;i++) {
+            if(nums[i]>0) {
+                return i;
+            }
+        }
+
+        if(nums[0] > 0) {
+            return nums.length;
+        }
+
 
         return nums.length+1;
-    }
-
-    boolean skip(int[] nums, int i) {
-        return nums[i]<=0 || nums[i]-1>=nums.length || nums[i] == nums[nums[i]-1] || nums[i] == i+1;
-    }
-
-    void swap(int i, int[] nums) {
-        int temp = nums[nums[i]-1];
-        nums[nums[i]-1] = nums[i];
-        nums[i] = temp;
     }
 }
