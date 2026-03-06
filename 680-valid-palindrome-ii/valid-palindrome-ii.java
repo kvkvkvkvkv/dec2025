@@ -4,23 +4,26 @@ class Solution {
 
         int l =0;
         int r = s.length()-1;
-        return isValid(s, l, r,0);
+
+
+        while(l<=r) {
+            if(s.charAt(l) != s.charAt(r)) {
+                return isValid(s, l+1, r) || isValid(s, l, r-1);
+            }
+            l++;
+            r--;
+        }
+        return true;
     }
 
-    boolean isValid(String s, int l, int r, int count) {
-
-        if(count>1) {
-            return false;
+    boolean isValid(String s, int l, int r) {
+        while(l<=r) {
+            if(s.charAt(l) != s.charAt(r)) {
+                return false;
+            }
+            l++;
+            r--;
         }
-
-        if(l >= r) {
-            return true;
-        }
-
-        if (s.charAt(l) == s.charAt(r)) {
-            return isValid(s, l+1, r-1, count);
-        }
-
-        return isValid(s,l+1,r, count+1) || isValid(s, l, r-1, count+1);
+        return true;
     }
 }
