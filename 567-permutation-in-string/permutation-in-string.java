@@ -1,32 +1,38 @@
 class Solution {
     public boolean checkInclusion(String s1, String s2) {
-        Map<Character, Integer> count = new HashMap();
-        Map<Character, Integer> value = new HashMap();
-        
+        Map<Character,Integer> c1 = new HashMap<>();
+        Map<Character,Integer> c2 = new HashMap<>();
+
         for(char ele:s1.toCharArray()) {
-            count.put(ele, count.getOrDefault(ele,0)+1);
+            c1.put(ele, c1.getOrDefault(ele, 0)+1);
         }
 
-        int l =0;
-        for(int r=0;r<s2.length();r++) {
-            char cur = s2.charAt(r);
-            if(!count.containsKey(cur)) {
-                l = r+1;
-                value.clear();
-                continue;
-            }
+        int l = -1;
+        for(int i=0;i<s2.length();i++) {
+            char cur = s2.charAt(i);
 
-            value.put(cur, value.getOrDefault(cur,0)+1);
+            if(!c1.containsKey(cur)) {
+                c2.clear();
+                l = -1;
+            } else {
+                if(l == -1) {
+                    l = i;
+                }
+                c2.put(cur, c2.getOrDefault(cur, 0)+1);
+                while(c2.get(cur)>c1.get(cur)) {
+                    c2.put(s2.charAt(l), c2.get(s2.charAt(l))-1);
+                    if(c2.get(s2.charAt(l)) == 0) {
+                        c2.remove(s2.charAt(l));
+                    }
+                    l++;
+                }
+            } 
 
-            while(value.get(cur)>count.get(cur)) {
-                value.put(s2.charAt(l), value.get(s2.charAt(l))-1);
-                l++;
-            }
-
-            if(s1.length() == r-l+1) {
+            if(c2.equals(c1)) {
                 return true;
             }
         }
+
         return false;
     }
 }
