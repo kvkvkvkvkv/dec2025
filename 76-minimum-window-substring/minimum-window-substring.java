@@ -1,44 +1,39 @@
 class Solution {
     public String minWindow(String s, String t) {
-        int l = 0;
-        int start = -1;
-        int end = -1;
+        Map<Character,Integer> ct = new HashMap<>();
+        Map<Character,Integer> cs = new HashMap<>();
 
-        Map<Character, Integer> tCount = new HashMap();
-        Map<Character, Integer> sCount = new HashMap();
-        for(int i=0;i<t.length();i++) {
-            char cur = t.charAt(i);
-            tCount.put(cur, tCount.getOrDefault(cur,0)+1);
+        for(char ele:t.toCharArray()) {
+            ct.put(ele, ct.getOrDefault(ele, 0)+1);
         }
-        int need = tCount.size();
-        int formed = 0;
+        int l =0;
+        int need = ct.size();
+        int have = 0;
         int min = Integer.MAX_VALUE;
-        for(int r=0;r<s.length();r++) {
-            char cur = s.charAt(r);
-            sCount.put(cur, sCount.getOrDefault(cur,0)+1);
+        int l1 = -1;
+        int l2 = -1;
+        for(int i=0;i<s.length();i++) {
+            char ele = s.charAt(i);
+            cs.put(ele, cs.getOrDefault(ele, 0)+1);
 
-            if(sCount.get(cur).equals(tCount.get(cur))) {
-                formed++;
+            if(ct.containsKey(ele) && cs.get(ele).equals(ct.get(ele))) {
+                have++;
             }
 
-            while(formed == need) {
-                char temp = s.charAt(l);
-                int val = sCount.get(temp)-1;
-                sCount.put(temp, val);
-                
-                if(min>r-l+1) {
-                    start = l;
-                    end = r;
-                    min = r-l+1;
+            while(have == need) {
+                char val = s.charAt(l);
+                if(min>i-l+1) {
+                    min = i-l+1;
+                    l1 = l;
+                    l2 = i;
                 }
-
-                if(val<tCount.getOrDefault(temp,0)) {
-                    formed--;
+                cs.put(val, cs.get(val)-1);
+                if(ct.containsKey(val) && cs.get(val)<ct.get(val)) {
+                    have--;
                 }
                 l++;
             }
         }
-
-        return start==-1?"":s.substring(start,end+1);
+        return l1==-1?"":s.substring(l1,l2+1);
     }
 }
