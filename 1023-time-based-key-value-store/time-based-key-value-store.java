@@ -1,59 +1,48 @@
 class TimeMap {
-
-    Map<String,List<Node>> map;
+    Map<String, List<Node>> map;
     public TimeMap() {
-        map = new HashMap();
+        map = new HashMap<>();
     }
     
     public void set(String key, String value, int timestamp) {
-        map.putIfAbsent(key, new ArrayList());
-        map.get(key).add(new Node(value, timestamp));
+        map.computeIfAbsent(key, k -> new ArrayList()).add(new Node(key, value, timestamp));
     }
     
     public String get(String key, int timestamp) {
-        return lowerBound(key, timestamp);
-    }
-
-    String lowerBound(String key, int time) {
-        String value = "";
-
-        if(!map.containsKey(key)) {
-            return value;
+        
+        if(map.get(key) == null) {
+            return "";
         }
 
-        List<Node> nodes = map.get(key);
+        List<Node> val = map.get(key);
         int l = 0;
-        int r = nodes.size()-1;
-
-        Node temp = null;
-        while(l<=r) {
-
+        int r = val.size()-1;
+        Node ans = null;
+        while (l<=r) {
             int mid = l + (r-l)/2;
-            Node cur = nodes.get(mid);
-
-            if(cur.time == time) {
-                return cur.value;
+            Node cur = val.get(mid);
+            if(timestamp == cur.time) {
+                ans = cur;
+                break;
             }
-
-            if(cur.time<time) {
-                temp = cur;
-                l = mid+1;
-            } else {
+            if(timestamp < cur.time) {
                 r = mid-1;
+            } else {
+                ans = cur;
+                l = mid+1;
             }
         }
-
-        return temp==null?"":temp.value;
-
-
+        return ans == null?"":ans.value;
     }
 }
 
 class Node {
+    String key;
     String value;
     int time;
 
-    Node(String value, int time) {
+    Node(String key, String value, int time) {
+        this.key = key;
         this.value = value;
         this.time = time;
     }
