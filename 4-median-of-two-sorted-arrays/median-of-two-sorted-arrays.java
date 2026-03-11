@@ -1,32 +1,42 @@
 class Solution {
-    int l =0;
-    int r =0;
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        
+        if(nums1.length>nums2.length) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+
+
         int m = nums1.length;
         int n = nums2.length;
-        
-        if((m+n)%2==0) {
-            int end = ((m+n)/2)-1;
-            for(int i=0;i<end;i++) {
-                min(nums1, nums2);
-            }
-            return (double)(min(nums1, nums2)+min(nums1,nums2))/2;
-        } else {
-            int end = (m+n)/2;
-            for(int i=0;i<end;i++) {
-                min(nums1, nums2);
-            }
-            return (double)min(nums1,nums2);
-        }
-    }
+        int l = 0;
+        int r = m;
+        int median = (m+n+1)/2;
+        boolean odd = (m+n)%2==1;
 
-    int min(int[] nums1, int[] nums2) {
-        if(l == nums1.length) {
-            return nums2[r++];
-        } 
-        if(r == nums2.length) {
-            return nums1[l++];
+        while(l<=r) {
+
+            int p1 = l+(r-l)/2;
+            int p2 = median - p1;
+
+            long l1 = p1-1<0?Integer.MIN_VALUE:nums1[p1-1];
+            long r1 = p1==m?Integer.MAX_VALUE:nums1[p1];
+            long l2 = p2-1<0?Integer.MIN_VALUE:nums2[p2-1];
+            long r2 = p2==n?Integer.MAX_VALUE:nums2[p2];
+
+            if(l1<=r2 && l2<=r1) {
+                if(odd) {
+                    return Math.max(l1,l2);
+                } else {
+                    return (Math.max(l1,l2) + Math.min(r1,r2)) /2.0;
+                }
+            }
+
+            if(l1>r2) {
+                r = p1-1;
+            } else {
+                l = p1+1;
+            }
         }
-        return nums1[l]<=nums2[r]?nums1[l++]:nums2[r++];
+        return -1;
     }
 }
