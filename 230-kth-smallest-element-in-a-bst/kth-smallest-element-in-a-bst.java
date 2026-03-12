@@ -27,6 +27,10 @@ class Solution {
 
         TreeNode v1 = small(root.left);
 
+        if(v1 != null) {
+            return v1;
+        }
+
         count--;
         if(count == 0) {
             return root;
